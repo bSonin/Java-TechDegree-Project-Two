@@ -6,18 +6,6 @@ import com.teamtreehouse.model.Team;
 import com.teamtreehouse.service.LeagueService;
 import com.teamtreehouse.service.ViewService;
 
-
-// NOTES FROM 6/23/18
-// Hurry to get MVP of create teams, add players and remove players.
-// This will make it easier to expand, and begin committing your work.
-// You should aim to have at least 3-4 commits for this project, and should get used
-// to committing each sitting. This will help you to avoid losing progress and get you
-// used to thinking about work in small, completeable tasks.
-
-// Get mvp create/add/remove, commit, then worry about expanding. Service methods are
-// your friends. Funnel everything down the LeagueService and ViewService!
-
-
 public class LeagueOrganizer {
     private League league;
     private LeagueService leagueService;
@@ -46,9 +34,10 @@ public class LeagueOrganizer {
                 case "remove":
                     removePlayerFlow();
                     break;
-//                case "4":
-//                case "teams":
-//                    break;
+                case "4":
+                case "teams":
+                    viewTeamFlow();
+                    break;
 //                case "5":
 //                case "availablePlayers":
 //                    break;
@@ -61,7 +50,7 @@ public class LeagueOrganizer {
 //                case "8":
 //                case "build":
 //                    break;
-                case "4": //FIXME: Will need to edit number as you add options!
+                case "5":
                  case "done":
                     isDone = true;
                     break;
@@ -89,13 +78,22 @@ public class LeagueOrganizer {
 
     private void removePlayerFlow() {
         if (league.getTeams().size() > 0) {
-            Player player = viewService.requestSignedPlayer(league);
             Team team = viewService.requestTeam(league);
-            leagueService.removePlayerFromTeam(player, team, league);
+            if (team.getPlayers().size() > 0) {
+                Player player = viewService.requestPlayerFromTeam(team);
+                leagueService.removePlayerFromTeam(player, team, league);
+            }
+            else {
+                viewService.viewNoPlayersOnTeamAlert();
+            }
         }
         else {
             viewService.viewNoTeamsAlert();
         }
+    }
+
+    private void viewTeamFlow() {
+        viewService.viewTeams(league.getTeams());
     }
 
 }

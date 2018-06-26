@@ -25,7 +25,7 @@ public class ViewService {
         mainMenu.put("Create", "Create a new team");
         mainMenu.put("Add", "Add players to a team");
         mainMenu.put("Remove", "Remove players from a new team");
-//        mainMenu.put("Teams", "View a list of current teams");
+        mainMenu.put("Teams", "View a list of current teams");
 //        mainMenu.put("Players", "View a list of current players");
 //        mainMenu.put("Register", "Register a new player with the league and add them to a wait list");
 //        mainMenu.put("Expel", "Expel a player from the league, bringing the player at the top of the wait list into the pool");
@@ -40,8 +40,8 @@ public class ViewService {
         for (Map.Entry<String, String> menuItem : mainMenu.entrySet()) {
             System.out.printf("%d) %-9s-  %s%n", ++i, menuItem.getKey(), menuItem.getValue());
         }
-        System.out.println("");
-        System.out.println("");
+        System.out.println();
+        System.out.println();
     }
 
     public boolean viewHeightReport(Team team) {
@@ -67,7 +67,7 @@ public class ViewService {
     }
 
     public void viewTeamRoster (Team team) {
-        // Players for specific team
+        viewPlayers(team.getPlayers());
     }
 
     public void viewLeagueRoster () {
@@ -97,6 +97,7 @@ public class ViewService {
     }
 
     public Team requestTeam(League league) {
+        System.out.println();
         System.out.println("Please select a team by entering its corresponding number:");
         viewTeams(league.getTeams());
         System.out.printf("Your choice:  ");
@@ -105,6 +106,7 @@ public class ViewService {
     }
 
     public Player requestUnsignedPlayer(League league) {
+        System.out.println();
         System.out.println("Please select a player by entering his/her corresponding number:");
         viewPlayers(league.getUnsignedPlayers());
         System.out.printf("Your choice:  ");
@@ -147,6 +149,7 @@ public class ViewService {
     }
 
     public String requestMainMenuAction() {
+        System.out.println();
         System.out.println("Please select an action from the list below:");
         viewMainMenu();
         System.out.printf("Your choice:  ");
@@ -154,6 +157,7 @@ public class ViewService {
     }
 
     public Player requestSignedPlayer(League league) {
+        System.out.println();
         System.out.println("Please select a player by entering his/her corresponding number:");
         viewPlayers(league.getSignedPlayers());
         System.out.printf("Your choice:  ");
@@ -163,5 +167,17 @@ public class ViewService {
 
     public void viewNoTeamsAlert() {
         System.out.println("No teams exist! Please create a team before adding/removing players");
+    }
+
+    public Player requestPlayerFromTeam(Team team) {
+        System.out.printf("Please select a player from the %s's roster:%n", team.getTeamName());
+        viewTeamRoster(team);
+        System.out.println("Your choice:  ");
+        List<Player> players = new ArrayList<>(team.getPlayers());
+        return players.get(readIntFromInput() - 1);
+    }
+
+    public void viewNoPlayersOnTeamAlert() {
+        System.out.println("There are no players on this team, so no players can be removed!");
     }
 }
