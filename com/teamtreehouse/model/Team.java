@@ -8,13 +8,11 @@ public class Team implements Comparable<Team> {
 
     private String teamName;
     private String coach;
-    private ExperienceLevel experienceLevel;
     private Set<Player> players;
 
     public Team(String teamName, String coach) {
         this.teamName = teamName;
         this.coach = coach;
-        experienceLevel = ExperienceLevel.NONE;
         players = new TreeSet<>();
     }
 
@@ -32,14 +30,6 @@ public class Team implements Comparable<Team> {
 
     public void setCoach(String coach) {
         this.coach = coach;
-    }
-
-    public ExperienceLevel getExperienceLevel() {
-        return experienceLevel;
-    }
-
-    public void setExperienceLevel(ExperienceLevel experienceLevel) {
-        this.experienceLevel = experienceLevel;
     }
 
     public Set<Player> getPlayers() {

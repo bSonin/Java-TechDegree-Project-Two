@@ -9,6 +9,8 @@ public class League {
     private Set<Player> signedPlayers;
     private Set<Player> waitListedPlayers;
     private Set<Team> teams;
+    // TODO: Consider adding a static playersPerTeam max, which would need to be enforced during adding
+    //       Will make check for number teams vs players easier
 
 
     public League(Player[] players) {

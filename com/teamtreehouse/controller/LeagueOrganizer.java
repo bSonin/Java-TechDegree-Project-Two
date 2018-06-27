@@ -4,6 +4,7 @@ import com.teamtreehouse.model.League;
 import com.teamtreehouse.model.Player;
 import com.teamtreehouse.model.Team;
 import com.teamtreehouse.service.LeagueService;
+import com.teamtreehouse.service.TeamService;
 import com.teamtreehouse.service.ViewService;
 
 public class LeagueOrganizer {
@@ -36,21 +37,29 @@ public class LeagueOrganizer {
                     break;
                 case "4":
                 case "teams":
-                    viewTeamFlow();
+                    teamsFlow();
                     break;
-//                case "5":
-//                case "availablePlayers":
-//                    break;
-//                case "6":
-//                case "register":
-//                    break;
-//                case "7":
-//                case "expel":
-//                    break;
-//                case "8":
-//                case "build":
-//                    break;
                 case "5":
+                case "height":
+                    heightReportFlow();
+                    break;
+                case "7":
+                case "balance":
+                    leagueBalanceReportFlow();
+                    break;
+                case "8":
+                case "build":
+                    buildLeagueFlow();
+                    break;
+                case "9":
+                case "register":
+                    registerPlayerFlow();
+                    break;
+                case "10":
+                case "expel":
+                    expelPlayerFlow();
+                    break;
+                case "11":
                  case "done":
                     isDone = true;
                     break;
@@ -59,6 +68,22 @@ public class LeagueOrganizer {
                     break;
             }
         }
+    }
+
+    private void expelPlayerFlow() {
+        viewService.viewNotCurrentlyFunctional();
+    }
+
+    private void registerPlayerFlow() {
+        viewService.viewNotCurrentlyFunctional();
+    }
+
+    private void buildLeagueFlow() {
+        viewService.viewNotCurrentlyFunctional();
+    }
+
+    private void leagueBalanceReportFlow() {
+        viewService.viewNotCurrentlyFunctional();
     }
 
     private void createTeamFlow() {
@@ -92,8 +117,38 @@ public class LeagueOrganizer {
         }
     }
 
-    private void viewTeamFlow() {
+    private void teamsFlow() {
         viewService.viewTeams(league.getTeams());
     }
+
+    private void heightReportFlow() {
+        if (league.getTeams().size() == 0) {
+            viewService.viewNoTeamsAlert();
+        }
+        else {
+            Team team = viewService.requestTeam(league);
+            viewService.viewHeightReport(leagueService.getTeamGroupedByHeights(team));
+        }
+    }
+
+//FIXME: Either clean this up or delete it...
+//    private void viewAvailablePlayersFlow() {
+//        if (league.getUnsignedPlayers().size() == 0) {
+//            viewService.viewNoAvailablePlayersAlert();
+//        }
+//        else {
+//            viewService.viewPlayers(league.getUnsignedPlayers());
+//        }
+//    }
+//
+//    private void viewRosterFlow() {
+//        if (league.getTeams().size() == 0) {
+//            viewService.viewNoTeamsAlert();
+//        }
+//        else {
+//            viewService.viewLeagueRoster(league);
+//        }
+//    }
+
 
 }

@@ -26,15 +26,17 @@ public class ViewService {
         mainMenu.put("Add", "Add players to a team");
         mainMenu.put("Remove", "Remove players from a new team");
         mainMenu.put("Teams", "View a list of current teams");
-//        mainMenu.put("Players", "View a list of current players");
-//        mainMenu.put("Register", "Register a new player with the league and add them to a wait list");
-//        mainMenu.put("Expel", "Expel a player from the league, bringing the player at the top of the wait list into the pool");
-//        mainMenu.put("Report", "");
-//        mainMenu.put("Balance", "");
-//        mainMenu.put("Build", "Allow the Organizer to build teams automatically");
+        mainMenu.put("Height", "View a height report for a chosen team");
+        mainMenu.put("Balance", "View a League Balance Report");
+        mainMenu.put("Build", "Allow the Organizer to build fair teams automatically");
+        mainMenu.put("Register", "Register a new player with the league and add them to a wait list");
+        mainMenu.put("Expel", "Expel a player from the league, bringing the player at the top of the wait list into the pool");
         mainMenu.put("Done", "Quit using the LeagueOrganizer application");
     }
 
+    // ---------------------
+    // *** Views ***
+    // ---------------------
     public void viewMainMenu() {
         int i = 0;
         for (Map.Entry<String, String> menuItem : mainMenu.entrySet()) {
@@ -44,35 +46,15 @@ public class ViewService {
         System.out.println();
     }
 
-    public boolean viewHeightReport(Team team) {
-        return false;
-    }
-
-    public boolean viewLeagueBalanceReport() {
-        return false;
-    }
-
-    public void viewNotValidOption(String request) {
-        System.out.printf("\"%s\" is not a valid option.%n", request);
-    }
-
-    public String requestTeamName() {
-        System.out.printf("Please enter the team's name:  ");
-        return readStringFromInput();
-    }
-
-    public String requestCoach() {
-        System.out.printf("Please enter the coach's name:  ");
-        return readStringFromInput();
-    }
-
     public void viewTeamRoster (Team team) {
         viewPlayers(team.getPlayers());
     }
 
-    public void viewLeagueRoster () {
-        // All players in league
-        // Should note if player already on team
+    public void viewLeagueRoster (League league) {
+        for (Team team : league.getTeams()) {
+            System.out.printf("Team: %s - Coach: %s", team.getTeamName(), team.getCoach());
+            viewTeamRoster(team);
+        }
     }
 
     public void viewTeams(Set<Team> teams) {
@@ -92,10 +74,55 @@ public class ViewService {
                     player.isPreviousExperience() ? "yes" : "no");
         }
     }
+
     public void viewWaitList() {
         // View players on wait list
     }
 
+    public void viewPlayerAdded(Team team, Player player) {
+        System.out.printf("%s has been added to the %s team!",
+                player.getFirstName() + " " + player.getLastName(),
+                team.getTeamName());
+    }
+
+    public void viewPlayerReleased(Team team, Player player) {
+        System.out.printf("%s has been released from the %s team!",
+                player.getFirstName() + " " + player.getLastName(),
+                team.getTeamName());
+    }
+
+    public void viewHeightReport(Map<String, Set<Player>> playersGroupByHeight) {
+        System.out.println("=== Players 35 - 40 inches ===");
+        viewPlayers(playersGroupByHeight.get("small"));
+        System.out.println("=== Players 41 - 46 inches ===");
+        viewPlayers(playersGroupByHeight.get("medium"));
+        System.out.println("=== Players 47 - 50 inches ===");
+        viewPlayers(playersGroupByHeight.get("tall"));
+    }
+
+    public void viewLeagueBalanceReport() {
+    }
+
+    // ---------------------
+    // *** Requests ***
+    // ---------------------
+    public String requestTeamName() {
+        System.out.printf("Please enter the team's name:  ");
+        return readStringFromInput();
+    }
+
+    public String requestCoach() {
+        System.out.printf("Please enter the coach's name:  ");
+        return readStringFromInput();
+    }
+
+    public String requestMainMenuAction() {
+        System.out.println();
+        System.out.println("Please select an action from the list below:");
+        viewMainMenu();
+        System.out.printf("Your choice:  ");
+        return readStringFromInput();
+    }
     public Team requestTeam(League league) {
         System.out.println();
         System.out.println("Please select a team by entering its corresponding number:");
@@ -114,6 +141,27 @@ public class ViewService {
         return players.get(readIntFromInput() - 1);
     }
 
+    public Player requestSignedPlayer(League league) {
+        System.out.println();
+        System.out.println("Please select a player by entering his/her corresponding number:");
+        viewPlayers(league.getSignedPlayers());
+        System.out.printf("Your choice:  ");
+        List<Player> players = new ArrayList<>(league.getSignedPlayers());
+        return players.get(readIntFromInput() - 1);
+    }
+
+
+    public Player requestPlayerFromTeam(Team team) {
+        System.out.printf("Please select a player from the %s's roster:%n", team.getTeamName());
+        viewTeamRoster(team);
+        System.out.println("Your choice:  ");
+        List<Player> players = new ArrayList<>(team.getPlayers());
+        return players.get(readIntFromInput() - 1);
+    }
+
+    // ---------------------
+    // *** Process Input ***
+    // ---------------------
     private int readIntFromInput() {
         int response = -1;
         try {
@@ -136,48 +184,26 @@ public class ViewService {
         return response;
     }
 
-    public void viewPlayerAdded(Team team, Player player) {
-        System.out.printf("%s has been added to the %s team!",
-                player.getFirstName() + " " + player.getLastName(),
-                team.getTeamName());
-    }
-
-    public void viewPlayerReleased(Team team, Player player) {
-        System.out.printf("%s has been released from the %s team!",
-                player.getFirstName() + " " + player.getLastName(),
-                team.getTeamName());
-    }
-
-    public String requestMainMenuAction() {
-        System.out.println();
-        System.out.println("Please select an action from the list below:");
-        viewMainMenu();
-        System.out.printf("Your choice:  ");
-        return readStringFromInput();
-    }
-
-    public Player requestSignedPlayer(League league) {
-        System.out.println();
-        System.out.println("Please select a player by entering his/her corresponding number:");
-        viewPlayers(league.getSignedPlayers());
-        System.out.printf("Your choice:  ");
-        List<Player> players = new ArrayList<>(league.getSignedPlayers());
-        return players.get(readIntFromInput() - 1);
-    }
-
-    public void viewNoTeamsAlert() {
-        System.out.println("No teams exist! Please create a team before adding/removing players");
-    }
-
-    public Player requestPlayerFromTeam(Team team) {
-        System.out.printf("Please select a player from the %s's roster:%n", team.getTeamName());
-        viewTeamRoster(team);
-        System.out.println("Your choice:  ");
-        List<Player> players = new ArrayList<>(team.getPlayers());
-        return players.get(readIntFromInput() - 1);
-    }
-
+    // ---------------------
+    // *** Alerts ***
+    // ---------------------
     public void viewNoPlayersOnTeamAlert() {
         System.out.println("There are no players on this team, so no players can be removed!");
     }
+
+    public void viewNoTeamsAlert() {
+        System.out.println("No teams exist!");
+    }
+
+    public void viewNoAvailablePlayersAlert() {
+        System.out.println("There are no available players to be viewed!");
+    }
+
+    public void viewNotCurrentlyFunctional() {
+        System.out.println("Not currently functional! I have work to do!");
+    }
+    public void viewNotValidOption(String request) {
+        System.out.printf("\"%s\" is not a valid option.%n", request);
+    }
+
 }

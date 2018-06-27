@@ -4,6 +4,8 @@ import com.teamtreehouse.model.League;
 import com.teamtreehouse.model.Player;
 import com.teamtreehouse.model.Team;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class LeagueService {
@@ -35,6 +37,10 @@ public class LeagueService {
         teamService.removePlayer(team, player);
         releasePlayer(league, player);
         viewService.viewPlayerReleased(team, player);
+    }
+
+    public Map<String, Set<Player>> getTeamGroupedByHeights(Team team) {
+        return teamService.groupPlayersByHeight(team);
     }
 
     private void signPlayer(League league, Player player) {
