@@ -1,13 +1,11 @@
 package com.teamtreehouse.model;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class League {
     private Set<Player> unsignedPlayers;
     private Set<Player> signedPlayers;
-    private Set<Player> waitListedPlayers;
+    private Queue<Player> waitListedPlayers;
     private Set<Team> teams;
     // TODO: Consider adding a static playersPerTeam max, which would need to be enforced during adding
     //       Will make check for number teams vs players easier
@@ -15,7 +13,7 @@ public class League {
 
     public League(Player[] players) {
         signedPlayers = new TreeSet<>();
-        waitListedPlayers = new TreeSet<>();
+        waitListedPlayers = new LinkedList<>();
         teams = new TreeSet<>();
         unsignedPlayers = new TreeSet<>(Arrays.asList(players));
     }
@@ -36,11 +34,11 @@ public class League {
         this.unsignedPlayers = unsignedPlayers;
     }
 
-    public Set<Player> getWaitListedPlayers() {
+    public Queue<Player> getWaitListedPlayers() {
         return waitListedPlayers;
     }
 
-    public void setWaitListedPlayers(Set<Player> waitListedPlayers) {
+    public void setWaitListedPlayers(Queue<Player> waitListedPlayers) {
         this.waitListedPlayers = waitListedPlayers;
     }
 

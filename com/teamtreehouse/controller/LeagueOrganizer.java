@@ -7,6 +7,24 @@ import com.teamtreehouse.service.LeagueService;
 import com.teamtreehouse.service.TeamService;
 import com.teamtreehouse.service.ViewService;
 
+
+//FIXME: Next Steps
+/*
+    List of items to complete moving forward
+    1) Test the current code you've written more thoroughly. This isn't the wild west
+    2) Finish the league balance report once admins reply to your requirements question
+    3) Finish registration/expulsion once admins reply to your requirements question
+    4) Clean up any code that has become unused during iteration
+    5) Consider/bolster null checking/exception handling for actions that require
+           players or teams exist
+    5) Go through U/I to make sure things look nice/neat
+    7) Submit
+
+    IF you finish all steps except the code you can't complete without teacher clarification,
+    go on to your coursework for unit 3.
+
+ */
+
 public class LeagueOrganizer {
     private League league;
     private LeagueService leagueService;
@@ -60,6 +78,9 @@ public class LeagueOrganizer {
                     expelPlayerFlow();
                     break;
                 case "11":
+                case "wait":
+                    waitListFlow();
+                case "12":
                  case "done":
                     isDone = true;
                     break;
@@ -70,12 +91,18 @@ public class LeagueOrganizer {
         }
     }
 
+    private void waitListFlow() {
+        viewService.viewWaitList(league.getWaitListedPlayers());
+    }
+
     private void expelPlayerFlow() {
-        viewService.viewNotCurrentlyFunctional();
+        Player player = viewService.requestUnsignedPlayer(league);
+        leagueService.removePlayerFromLeague(player, league);
+        leagueService.moveWaitListedPlayerIntoLeague(league);
     }
 
     private void registerPlayerFlow() {
-        viewService.viewNotCurrentlyFunctional();
+        leagueService.registerPlayer(league);
     }
 
     private void buildLeagueFlow() {

@@ -45,6 +45,19 @@ public class Team implements Comparable<Team> {
         return this.teamName.compareTo(other.getTeamName());
     }
 
+    // Utility Methods
+    public int getNumberExperiencedPlayers() {
+        int numExperienced = 0;
+        for (Player player : players) {
+            numExperienced = player.isPreviousExperience() ? ++numExperienced : numExperienced;
+        }
+        return numExperienced;
+    }
+
+    public double getTeamExperienceLevel() {
+        return (double) getNumberExperiencedPlayers() / (double) players.size();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

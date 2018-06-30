@@ -70,4 +70,22 @@ public class LeagueService {
         this.viewService = viewService;
     }
 
+    public void registerPlayer(League league) {
+        String firstName = viewService.requestFirstName();
+        String lastName = viewService.requestLastName();
+        int heightInInches = viewService.requestHeight();
+        boolean isExperienced = viewService.requestExperience();
+        league.getWaitListedPlayers().add(new Player(firstName, lastName, heightInInches, isExperienced));
+    }
+
+    public void removePlayerFromLeague(Player player, League league) {
+        league.getUnsignedPlayers().remove(player);
+    }
+
+    public void moveWaitListedPlayerIntoLeague(League league) {
+        Player firstInLine = league.getWaitListedPlayers().poll();
+        if (firstInLine != null) {
+            league.getUnsignedPlayers().add(firstInLine);
+        }
+    }
 }

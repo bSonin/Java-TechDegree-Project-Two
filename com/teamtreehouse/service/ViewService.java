@@ -31,6 +31,7 @@ public class ViewService {
         mainMenu.put("Build", "Allow the Organizer to build fair teams automatically");
         mainMenu.put("Register", "Register a new player with the league and add them to a wait list");
         mainMenu.put("Expel", "Expel a player from the league, bringing the player at the top of the wait list into the pool");
+        mainMenu.put("Wait", "View players on the wait list");
         mainMenu.put("Done", "Quit using the LeagueOrganizer application");
     }
 
@@ -75,8 +76,10 @@ public class ViewService {
         }
     }
 
-    public void viewWaitList() {
-        // View players on wait list
+    public void viewWaitList(Queue<Player> waitListedPlayers) {
+        System.out.println("This is the list of wait listed players:");
+        viewPlayers(new TreeSet<>(waitListedPlayers));
+        //FIXME: Can TreeSet's constructor take a Queue?
     }
 
     public void viewPlayerAdded(Team team, Player player) {
@@ -93,10 +96,13 @@ public class ViewService {
 
     public void viewHeightReport(Map<String, Set<Player>> playersGroupByHeight) {
         System.out.println("=== Players 35 - 40 inches ===");
+        System.out.printf("There are %d players in this range:%n", playersGroupByHeight.get("small").size());
         viewPlayers(playersGroupByHeight.get("small"));
         System.out.println("=== Players 41 - 46 inches ===");
+        System.out.printf("There are %d players in this range:%n", playersGroupByHeight.get("medium").size());
         viewPlayers(playersGroupByHeight.get("medium"));
         System.out.println("=== Players 47 - 50 inches ===");
+        System.out.printf("There are %d players in this range:%n", playersGroupByHeight.get("tall").size());
         viewPlayers(playersGroupByHeight.get("tall"));
     }
 
@@ -106,6 +112,25 @@ public class ViewService {
     // ---------------------
     // *** Requests ***
     // ---------------------
+    public String requestFirstName() {
+        System.out.printf("Please enter the players's first name:  ");
+        return readStringFromInput();
+    }
+
+    public String requestLastName() {
+        System.out.printf("Please enter the players's last name:  ");
+        return readStringFromInput();
+    }
+
+    public int requestHeight() {
+        System.out.printf("Please enter the players's height (inches):  ");
+        return readIntFromInput();
+    }
+    public boolean requestExperience() {
+        System.out.printf("Does the player have previous experience? (yes/no):  ");
+        return readBooleanFromInput();
+    }
+
     public String requestTeamName() {
         System.out.printf("Please enter the team's name:  ");
         return readStringFromInput();
@@ -184,6 +209,18 @@ public class ViewService {
         return response;
     }
 
+    private boolean readBooleanFromInput() {
+        boolean response = false;
+        try {
+            String textResponse = reader.readLine().trim();
+            response = textResponse.equalsIgnoreCase("yes") ? true : false;
+        } catch (Exception e) {
+            System.out.println("ERROR: Could not read input - Closing Program!");
+            System.exit(0);
+        }
+        return response;
+    }
+
     // ---------------------
     // *** Alerts ***
     // ---------------------
@@ -202,6 +239,7 @@ public class ViewService {
     public void viewNotCurrentlyFunctional() {
         System.out.println("Not currently functional! I have work to do!");
     }
+
     public void viewNotValidOption(String request) {
         System.out.printf("\"%s\" is not a valid option.%n", request);
     }
