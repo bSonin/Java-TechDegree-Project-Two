@@ -26,6 +26,7 @@ public class ViewService {
         mainMenu.put("Add", "Add players to a team");
         mainMenu.put("Remove", "Remove players from a new team");
         mainMenu.put("Teams", "View a list of current teams");
+        mainMenu.put("Roster", "View a team's roster");
         mainMenu.put("Height", "View a height report for a chosen team");
         mainMenu.put("Balance", "View a League Balance Report");
         mainMenu.put("Build", "Allow the Organizer to build fair teams automatically");
@@ -48,10 +49,12 @@ public class ViewService {
     }
 
     public void viewTeamRoster (Team team) {
+        System.out.printf("Team: %s - Coach: %s%n", team.getTeamName(), team.getCoach());
         viewPlayers(team.getPlayers());
     }
 
     public void viewLeagueRoster (League league) {
+        if (league == null) { return; }
         for (Team team : league.getTeams()) {
             System.out.printf("Team: %s - Coach: %s", team.getTeamName(), team.getCoach());
             viewTeamRoster(team);
@@ -59,6 +62,10 @@ public class ViewService {
     }
 
     public void viewTeams(Set<Team> teams) {
+        if (teams == null || teams.size() == 0) {
+            System.out.println("No teams to view!");
+            return;
+        }
         int i = 0;
         for (Team team : teams) {
             System.out.printf("%d) %s%n", ++i, team.getTeamName());
@@ -66,6 +73,10 @@ public class ViewService {
     }
 
     public void viewPlayers(Set<Player> players) {
+        if (players == null || players.size() == 0) {
+            System.out.println("No players to view!");
+            return;
+        }
         int i = 0;
         for (Player player : players) {
             System.out.printf("%d) %s - Height: %d (in)  Experience: %s%n",
@@ -73,13 +84,18 @@ public class ViewService {
                     player.getFirstName() + " " + player.getLastName(),
                     player.getHeightInInches(),
                     player.isPreviousExperience() ? "yes" : "no");
+
         }
     }
 
     public void viewWaitList(Queue<Player> waitListedPlayers) {
-        System.out.println("This is the list of wait listed players:");
-        viewPlayers(new TreeSet<>(waitListedPlayers));
-        //FIXME: Can TreeSet's constructor take a Queue?
+        if (waitListedPlayers == null || waitListedPlayers.size() == 0) {
+            System.out.println("There are no wait listed players.");
+        } else {
+            System.out.println("This is the list of wait listed players:");
+            viewPlayers(new TreeSet<>(waitListedPlayers));
+            //FIXME: Can TreeSet's constructor take a Queue?
+        }
     }
 
     public void viewPlayerAdded(Team team, Player player) {
@@ -95,17 +111,35 @@ public class ViewService {
     }
 
     public void viewHeightReport(Map<String, Set<Player>> playersGroupByHeight) {
-        System.out.println("=== Players 35 - 40 inches ===");
-        System.out.printf("There are %d players in this range:%n", playersGroupByHeight.get("small").size());
-        viewPlayers(playersGroupByHeight.get("small"));
-        System.out.println("=== Players 41 - 46 inches ===");
-        System.out.printf("There are %d players in this range:%n", playersGroupByHeight.get("medium").size());
-        viewPlayers(playersGroupByHeight.get("medium"));
-        System.out.println("=== Players 47 - 50 inches ===");
-        System.out.printf("There are %d players in this range:%n", playersGroupByHeight.get("tall").size());
-        viewPlayers(playersGroupByHeight.get("tall"));
-    }
+        //FIXME: Bulk categories for shorter/taller than these ranges
+        Set<Player> smallPlayers = playersGroupByHeight.get("small");
+        if (smallPlayers == null || smallPlayers.size() == 0) {
+            System.out.println("=== No Players of Size 35 - 40 inches ===");
 
+        } else {
+            System.out.println("=== Players 35 - 40 inches ===");
+            System.out.printf("There are %d players in this range:%n", smallPlayers.size());
+            viewPlayers(playersGroupByHeight.get("small"));
+        }
+
+        Set<Player> mediumPlayers = playersGroupByHeight.get("medium");
+        if (mediumPlayers == null || mediumPlayers.size() == 0) {
+            System.out.println("=== No Players of Size 41 - 46 inches ===");
+        } else {
+            System.out.println("=== Players 41 - 46 inches ===");
+            System.out.printf("There are %d players in this range:%n", mediumPlayers.size());
+            viewPlayers(playersGroupByHeight.get("medium"));
+        }
+
+        Set<Player> tallPlayers = playersGroupByHeight.get("tall");
+        if (tallPlayers == null || tallPlayers.size() == 0) {
+            System.out.println("=== No Players of Size 47 - 50 inches ===");
+        } else {
+            System.out.println("=== Players 47 - 50 inches ===");
+            System.out.printf("There are %d players in this range:%n", tallPlayers.size());
+            viewPlayers(playersGroupByHeight.get("tall"));
+        }
+    }
     public void viewLeagueBalanceReport() {
     }
 
@@ -154,7 +188,9 @@ public class ViewService {
         viewTeams(league.getTeams());
         System.out.printf("Your choice:  ");
         List<Team> teams = new ArrayList<>(league.getTeams());
-        return teams.get(readIntFromInput() - 1);
+        int index = readIntFromInput() - 1;
+        return isOutOfBounds(teams.size(), index) ? null :teams.get(index);
+        //FIXME: bubble up null handling
     }
 
     public Player requestUnsignedPlayer(League league) {
@@ -163,7 +199,9 @@ public class ViewService {
         viewPlayers(league.getUnsignedPlayers());
         System.out.printf("Your choice:  ");
         List<Player> players = new ArrayList<>(league.getUnsignedPlayers());
-        return players.get(readIntFromInput() - 1);
+        int index = readIntFromInput() - 1;
+        return isOutOfBounds(players.size(), index) ? null : players.get(index);
+        //FIXME: bubble up null handling
     }
 
     public Player requestSignedPlayer(League league) {
@@ -172,7 +210,9 @@ public class ViewService {
         viewPlayers(league.getSignedPlayers());
         System.out.printf("Your choice:  ");
         List<Player> players = new ArrayList<>(league.getSignedPlayers());
-        return players.get(readIntFromInput() - 1);
+        int index = readIntFromInput() - 1;
+        return isOutOfBounds(players.size(), index) ? null: players.get(index);
+        //FIXME: bubble up null handling
     }
 
 
@@ -181,7 +221,13 @@ public class ViewService {
         viewTeamRoster(team);
         System.out.println("Your choice:  ");
         List<Player> players = new ArrayList<>(team.getPlayers());
-        return players.get(readIntFromInput() - 1);
+        int index = readIntFromInput() - 1;
+        return isOutOfBounds(players.size(), index) ? null : players.get(index);
+        //FIXME: bubble up null handling
+    }
+
+    private boolean isOutOfBounds(int size, int index) {
+        return index < 0 || index >= size;
     }
 
     // ---------------------
@@ -244,4 +290,7 @@ public class ViewService {
         System.out.printf("\"%s\" is not a valid option.%n", request);
     }
 
+    public void viewErrorProcessingRequestAlert() {
+        System.out.println("ERROR: Could not process request.");
+    }
 }

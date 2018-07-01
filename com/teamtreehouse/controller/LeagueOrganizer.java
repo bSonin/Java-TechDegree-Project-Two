@@ -58,6 +58,10 @@ public class LeagueOrganizer {
                     teamsFlow();
                     break;
                 case "5":
+                case "roster":
+                    rosterFlow();
+                    break;
+                case "6":
                 case "height":
                     heightReportFlow();
                     break;
@@ -91,12 +95,21 @@ public class LeagueOrganizer {
         }
     }
 
+    private void rosterFlow() {
+        Team team = viewService.requestTeam(league);
+        viewService.viewTeamRoster(team);
+    }
+
     private void waitListFlow() {
         viewService.viewWaitList(league.getWaitListedPlayers());
     }
 
     private void expelPlayerFlow() {
         Player player = viewService.requestUnsignedPlayer(league);
+        if (player == null) {
+            viewService.viewErrorProcessingRequestAlert();
+            return;
+        }
         leagueService.removePlayerFromLeague(player, league);
         leagueService.moveWaitListedPlayerIntoLeague(league);
     }
@@ -121,6 +134,10 @@ public class LeagueOrganizer {
         if (league.getTeams().size() > 0) {
             Player player = viewService.requestUnsignedPlayer(league);
             Team team = viewService.requestTeam(league);
+            if (team == null || player == null) {
+                viewService.viewErrorProcessingRequestAlert();
+                return;
+            }
             leagueService.addPlayerToTeam(player, team, league);
         }
         else {
@@ -131,8 +148,16 @@ public class LeagueOrganizer {
     private void removePlayerFlow() {
         if (league.getTeams().size() > 0) {
             Team team = viewService.requestTeam(league);
+            if (team == null) {
+                viewService.viewErrorProcessingRequestAlert();
+                return;
+            }
             if (team.getPlayers().size() > 0) {
                 Player player = viewService.requestPlayerFromTeam(team);
+                if (player == null) {
+                    viewService.viewErrorProcessingRequestAlert();
+                    return;
+                }
                 leagueService.removePlayerFromTeam(player, team, league);
             }
             else {
@@ -154,6 +179,10 @@ public class LeagueOrganizer {
         }
         else {
             Team team = viewService.requestTeam(league);
+            if (team == null) {
+                viewService.viewErrorProcessingRequestAlert();
+                return;
+            }
             viewService.viewHeightReport(leagueService.getTeamGroupedByHeights(team));
         }
     }
