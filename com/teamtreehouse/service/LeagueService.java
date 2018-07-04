@@ -4,9 +4,7 @@ import com.teamtreehouse.model.League;
 import com.teamtreehouse.model.Player;
 import com.teamtreehouse.model.Team;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class LeagueService {
     private TeamService teamService;
@@ -86,6 +84,40 @@ public class LeagueService {
         Player firstInLine = league.getWaitListedPlayers().poll();
         if (firstInLine != null) {
             league.getUnsignedPlayers().add(firstInLine);
+        }
+    }
+
+    public void createNumberOfTeams(League league, int numberOfTeams) {
+        for (int i = 0; i < numberOfTeams; ++i) {
+            createTeam(league);
+        }
+    }
+
+    public void assignPlayersToTeamsByExperienceLevel(League league, int desiredNumPlayersPerTeam) {
+
+        // Sort players by experience level so we can do round robin assignment
+        List<Player> players = new ArrayList<>(league.getUnsignedPlayers());
+        Collections.sort(players, new Comparator<Player>() {
+            @Override
+            public int compare(Player p1, Player p2) {
+                return Boolean.compare(p2.isPreviousExperience(), p1.isPreviousExperience());
+            }
+        });
+
+        // Determine number of players per team - force equal number players per team
+        //FIXME: Make this some constraint, or notify user you altered the number players per team
+        int maxPlayersPerTeam = (int) ((double) players.size() / (double) league.getTeams().size());
+        int playersPerTeam = (desiredNumPlayersPerTeam > maxPlayersPerTeam) ? maxPlayersPerTeam : desiredNumPlayersPerTeam;
+
+        // Assign players to teams
+        int playerCount = players.size();
+        int currentPlayer = 0;
+        while (playerCount >= league.getTeams().size() && (currentPlayer / league.getTeams().size() < playersPerTeam)) {
+            for (Team team : league.getTeams()) {
+                addPlayerToTeam(players.get(currentPlayer), team, league);
+                ++currentPlayer;
+                --playerCount;
+            }
         }
     }
 }

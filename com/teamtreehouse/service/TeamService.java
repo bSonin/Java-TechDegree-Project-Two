@@ -21,7 +21,7 @@ public class TeamService {
 
     public Map<String, Set<Player>> groupPlayersByHeight(Team team) {
         Map<String, Set<Player>> playersGroupedByHeight = new HashMap<>();
-        playersGroupedByHeight.put("short", new HashSet<>());
+        playersGroupedByHeight.put("small", new HashSet<>());
         playersGroupedByHeight.put("medium", new HashSet<>());
         playersGroupedByHeight.put("tall", new HashSet<>());
 

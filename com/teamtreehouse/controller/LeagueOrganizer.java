@@ -10,19 +10,13 @@ import com.teamtreehouse.service.ViewService;
 
 //FIXME: Next Steps
 /*
-    List of items to complete moving forward
-    1) Test the current code you've written more thoroughly. This isn't the wild west
-    2) Finish the league balance report once admins reply to your requirements question
-    3) Finish registration/expulsion once admins reply to your requirements question
-    4) Clean up any code that has become unused during iteration
-    5) Consider/bolster null checking/exception handling for actions that require
-           players or teams exist
-    5) Go through U/I to make sure things look nice/neat
-    7) Submit
-
-    IF you finish all steps except the code you can't complete without teacher clarification,
-    go on to your coursework for unit 3.
-
+    1) Confirm current functionality
+           *) Questionable on add/remove player from chosen/yet to be chosen team
+    2) Clean up methods based on Treehouse admin feedback
+    3) Bolster null/empty collection checking
+    4) Consider FIXMEs
+    5) Clean up UI a bit.
+    6) Submit
  */
 
 public class LeagueOrganizer {
@@ -84,6 +78,7 @@ public class LeagueOrganizer {
                 case "11":
                 case "wait":
                     waitListFlow();
+                    break;
                 case "12":
                  case "done":
                     isDone = true;
@@ -119,15 +114,37 @@ public class LeagueOrganizer {
     }
 
     private void buildLeagueFlow() {
-        viewService.viewNotCurrentlyFunctional();
+        if (league.getTeams() == null || league.getTeams().size() == 0) {
+            int numTeams = viewService.requestNumberTeams();
+            while (!isNumberTeamsValid(numTeams)) {
+                viewService.viewInvalidNumberTeamsAlert(league.getUnsignedPlayers().size());
+                numTeams = viewService.requestNumberTeams();
+            }
+            leagueService.createNumberOfTeams(league, numTeams);
+
+            int numPlayersPerTeam = viewService.requestNumberPlayers(league);
+            while (!isNumberPlayersPerTeamValid(numPlayersPerTeam)) {
+                viewService.viewInvalidPlayersPerTeamAlert(league);
+                numPlayersPerTeam = viewService.requestNumberPlayers(league);
+            }
+            leagueService.assignPlayersToTeamsByExperienceLevel(league, numPlayersPerTeam);
+        }
+        else {
+            viewService.viewTeamsAlreadyExistAlert();
+        }
     }
 
     private void leagueBalanceReportFlow() {
-        viewService.viewNotCurrentlyFunctional();
+        viewService.viewLeagueBalanceReport(league);
     }
 
     private void createTeamFlow() {
-        leagueService.createTeam(league);
+        if (league.getUnsignedPlayers().size() < 1) {
+            viewService.viewNoAvailablePlayersAlert();
+        }
+        else {
+            leagueService.createTeam(league);
+        }
     }
 
     private void addPlayerFlow() {
@@ -185,6 +202,15 @@ public class LeagueOrganizer {
             }
             viewService.viewHeightReport(leagueService.getTeamGroupedByHeights(team));
         }
+    }
+
+    private boolean isNumberTeamsValid(int numTeams) {
+        return numTeams <= league.getUnsignedPlayers().size();
+    }
+
+    private boolean isNumberPlayersPerTeamValid(int numPlayersPerTeam) {
+        return league.getUnsignedPlayers().size() >= numPlayersPerTeam;
+        //FIXME: am I missing a check here?
     }
 
 //FIXME: Either clean this up or delete it...

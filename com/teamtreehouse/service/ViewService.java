@@ -99,7 +99,7 @@ public class ViewService {
     }
 
     public void viewPlayerAdded(Team team, Player player) {
-        System.out.printf("%s has been added to the %s team!",
+        System.out.printf("%s has been added to the %s team!%n",
                 player.getFirstName() + " " + player.getLastName(),
                 team.getTeamName());
     }
@@ -140,7 +140,13 @@ public class ViewService {
             viewPlayers(playersGroupByHeight.get("tall"));
         }
     }
-    public void viewLeagueBalanceReport() {
+    public void viewLeagueBalanceReport(League league) {
+        for (Team team : league.getTeams()) {
+            System.out.printf("--- Team: %s ---%n", team.getTeamName());
+            System.out.printf("Number Experienced Players: %d%n", team.getNumberExperiencedPlayers());
+            System.out.printf("Number Inexperienced Players: %d%n", team.getPlayers().size() - team.getNumberExperiencedPlayers());
+            System.out.printf("Team Experience Level: %.2f%%%n%n", team.getTeamExperienceLevel());
+        }
     }
 
     // ---------------------
@@ -215,6 +221,17 @@ public class ViewService {
         //FIXME: bubble up null handling
     }
 
+    public int requestNumberTeams() {
+        System.out.println();
+        System.out.println("Please enter the number of teams to be created:");
+        return readIntFromInput();
+    }
+
+    public int requestNumberPlayers(League league) {
+        System.out.println();
+        System.out.println("Please enter the number of players you'd like per team:");
+        return readIntFromInput();
+    }
 
     public Player requestPlayerFromTeam(Team team) {
         System.out.printf("Please select a player from the %s's roster:%n", team.getTeamName());
@@ -279,7 +296,7 @@ public class ViewService {
     }
 
     public void viewNoAvailablePlayersAlert() {
-        System.out.println("There are no available players to be viewed!");
+        System.out.println("There are no available players to be viewed or added!");
     }
 
     public void viewNotCurrentlyFunctional() {
@@ -292,5 +309,20 @@ public class ViewService {
 
     public void viewErrorProcessingRequestAlert() {
         System.out.println("ERROR: Could not process request.");
+    }
+
+    public void viewInvalidPlayersPerTeamAlert(League league) {
+        System.out.printf("There are only %d players available, and there must be at least one player on each of the %d teams.%n",
+                league.getUnsignedPlayers().size(),
+                league.getTeams().size());
+    }
+
+    public void viewTeamsAlreadyExistAlert() {
+        System.out.println("ERROR: You cannot use the team builder feature if the league already has teams.");
+    }
+
+    public void viewInvalidNumberTeamsAlert(int numAvailablePlayers) {
+        System.out.println("ERROR: You cannot have more teams than there are players.");
+        System.out.printf("There are %d players available.%n", numAvailablePlayers);
     }
 }
