@@ -16,7 +16,20 @@ public class LeagueService {
     }
 
     public void createTeam(League league) {
+        boolean teamNameUnique = false;
         String teamName = viewService.requestTeamName();
+        while (!teamNameUnique) {
+            teamNameUnique = true;
+            for (Team team : league.getTeams()) {
+                if (teamName.equalsIgnoreCase(team.getTeamName())) {
+                    viewService.viewTeamNameExistsAlert();
+                    teamName = viewService.requestTeamName();
+                    teamNameUnique = false;
+                    break;
+                }
+            }
+        }
+
         String coach = viewService.requestCoach();
         league.getTeams().add(new Team(teamName, coach));
     }
@@ -89,7 +102,6 @@ public class LeagueService {
         });
 
         // Determine number of players per team - force equal number players per team
-        //FIXME: Make this some constraint, or notify user you altered the number players per team
         int maxPlayersPerTeam = (int) ((double) players.size() / (double) league.getTeams().size());
         int playersPerTeam = (desiredNumPlayersPerTeam > maxPlayersPerTeam) ? maxPlayersPerTeam : desiredNumPlayersPerTeam;
 

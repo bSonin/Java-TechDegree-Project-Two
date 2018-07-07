@@ -1,13 +1,11 @@
 package com.teamtreehouse.service;
 
-import com.sun.org.apache.bcel.internal.classfile.SourceFile;
 import com.teamtreehouse.model.League;
 import com.teamtreehouse.model.Player;
 import com.teamtreehouse.model.Team;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.sql.SQLOutput;
 import java.util.*;
 
 public class ViewService {
@@ -44,8 +42,8 @@ public class ViewService {
         for (Map.Entry<String, String> menuItem : mainMenu.entrySet()) {
             System.out.printf("%d) %-9s-  %s%n", ++i, menuItem.getKey(), menuItem.getValue());
         }
-        System.out.println("");
-        System.out.println("");
+        System.out.println();
+        System.out.println();
     }
 
     public void viewTeamRoster (Team team) {
@@ -56,20 +54,20 @@ public class ViewService {
     public void viewTeams(Set<Team> teams) {
         if (teams == null || teams.size() == 0) {
             System.out.println("No teams to view!");
-            System.out.println("");
+            System.out.println();
             return;
         }
         int i = 0;
         for (Team team : teams) {
             System.out.printf("%d) %s%n", ++i, team.getTeamName());
         }
-        System.out.println("");
+        System.out.println();
     }
 
     public void viewPlayers(Set<Player> players) {
         if (players == null || players.size() == 0) {
             System.out.println("No players to view!");
-            System.out.println("");
+            System.out.println();
             return;
         }
         int i = 0;
@@ -81,13 +79,13 @@ public class ViewService {
                     player.isPreviousExperience() ? "yes" : "no");
 
         }
-        System.out.println("");
+        System.out.println();
     }
 
     public void viewWaitList(Queue<Player> waitListedPlayers) {
         if (waitListedPlayers == null || waitListedPlayers.size() == 0) {
             System.out.println("There are no wait listed players.");
-            System.out.println("");
+            System.out.println();
         } else {
             System.out.println("This is the list of wait listed players:");
             viewPlayers(new TreeSet<>(waitListedPlayers));
@@ -98,18 +96,17 @@ public class ViewService {
         System.out.printf("%s has been added to the %s team!%n",
                 player.getFirstName() + " " + player.getLastName(),
                 team.getTeamName());
-        System.out.println("");
+        System.out.println();
     }
 
     public void viewPlayerReleased(Team team, Player player) {
         System.out.printf("%s has been released from the %s team!",
                 player.getFirstName() + " " + player.getLastName(),
                 team.getTeamName());
-        System.out.println("");
+        System.out.println();
     }
 
     public void viewHeightReport(Map<String, Set<Player>> playersGroupByHeight) {
-        //FIXME: Bulk categories for shorter/taller than these ranges
         Set<Player> smallPlayers = playersGroupByHeight.get("small");
         if (smallPlayers == null || smallPlayers.size() == 0) {
             System.out.println("=== No Players of Size 35 - 40 inches ===");
@@ -136,7 +133,7 @@ public class ViewService {
             System.out.println("=== Players 47 - 50 inches ===");
             System.out.printf("There are %d players in this range:%n%", tallPlayers.size());
             viewPlayers(playersGroupByHeight.get("tall"));
-            System.out.println("");
+            System.out.println();
         }
     }
     public void viewLeagueBalanceReport(League league) {
@@ -146,7 +143,7 @@ public class ViewService {
             System.out.printf("Number Inexperienced Players: %d%n", team.getPlayers().size() - team.getNumberExperiencedPlayers());
             System.out.printf("Team Experience Level: %.2f%%%n%n", team.getTeamExperienceLevel());
         }
-        System.out.println("");
+        System.out.println();
     }
 
     // ---------------------
@@ -196,7 +193,6 @@ public class ViewService {
         List<Team> teams = new ArrayList<>(league.getTeams());
         int index = readIntFromInput() - 1;
         return isOutOfBounds(teams.size(), index) ? null :teams.get(index);
-        //FIXME: bubble up null handling
     }
 
     public Player requestUnsignedPlayer(League league) {
@@ -207,18 +203,6 @@ public class ViewService {
         List<Player> players = new ArrayList<>(league.getUnsignedPlayers());
         int index = readIntFromInput() - 1;
         return isOutOfBounds(players.size(), index) ? null : players.get(index);
-        //FIXME: bubble up null handling
-    }
-
-    public Player requestSignedPlayer(League league) {
-        System.out.println();
-        System.out.println("Please select a player by entering his/her corresponding number:");
-        viewPlayers(league.getSignedPlayers());
-        System.out.printf("Your choice:  ");
-        List<Player> players = new ArrayList<>(league.getSignedPlayers());
-        int index = readIntFromInput() - 1;
-        return isOutOfBounds(players.size(), index) ? null: players.get(index);
-        //FIXME: bubble up null handling
     }
 
     public int requestNumberTeams() {
@@ -240,7 +224,6 @@ public class ViewService {
         List<Player> players = new ArrayList<>(team.getPlayers());
         int index = readIntFromInput() - 1;
         return isOutOfBounds(players.size(), index) ? null : players.get(index);
-        //FIXME: bubble up null handling
     }
 
     private boolean isOutOfBounds(int size, int index) {
@@ -289,17 +272,17 @@ public class ViewService {
     // ---------------------
     public void viewNoPlayersOnTeamAlert() {
         System.out.println("There are no players on this team, so no players can be removed!");
-        System.out.println("");
+        System.out.println();
     }
 
     public void viewNoTeamsAlert() {
         System.out.println("No teams exist!");
-        System.out.println("");
+        System.out.println();
     }
 
     public void viewNoAvailablePlayersAlert() {
         System.out.println("There are no available players to be viewed or added!");
-        System.out.println("");
+        System.out.println();
     }
 
     public void viewNotValidOption(String request) {
@@ -308,7 +291,7 @@ public class ViewService {
 
     public void viewErrorProcessingRequestAlert() {
         System.out.println("ERROR: Could not process request.");
-        System.out.println("");
+        System.out.println();
     }
 
     public void viewInvalidPlayersPerTeamAlert(League league) {
@@ -320,7 +303,7 @@ public class ViewService {
 
     public void viewTeamsAlreadyExistAlert() {
         System.out.println("ERROR: You cannot use the team builder feature if the league already has teams.");
-        System.out.println("");
+        System.out.println();
     }
 
     public void viewInvalidNumberTeamsAlert(int numAvailablePlayers) {
@@ -330,11 +313,16 @@ public class ViewService {
 
     public void viewTeamIsFullAlert() {
         System.out.println("ERROR: The team already has the maximum number of players! Please add the player to a different team.");
-        System.out.println("");
+        System.out.println();
     }
 
     public void viewModifiedRequestedTeamSizeAlert() {
-        System.out.println("The request number of players per team has been altered to create teams of equal size.");
-        System.out.println("");
+        System.out.println("ERROR: The request number of players per team has been altered to create teams of equal size.");
+        System.out.println();
+    }
+
+    public void viewTeamNameExistsAlert() {
+        System.out.println("ERROR: This team name already exists! Try again!");
+        System.out.println();
     }
 }

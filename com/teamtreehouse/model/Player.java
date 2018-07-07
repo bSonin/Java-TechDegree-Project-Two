@@ -37,7 +37,7 @@ public class Player implements Comparable<Player>, Serializable {
   public int compareTo(Player other) {
     String fullName = lastName + firstName;
     String otherFullName=  other.getLastName() + other.getFirstName();
-    return fullName.compareTo(otherFullName);
+    return fullName.toLowerCase().compareTo(otherFullName.toLowerCase());
   }
 
   @Override

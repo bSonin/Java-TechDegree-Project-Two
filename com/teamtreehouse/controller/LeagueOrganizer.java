@@ -80,6 +80,10 @@ public class LeagueOrganizer {
 
     private void rosterFlow() {
         Team team = viewService.requestTeam(league);
+        if (team == null) {
+            viewService.viewErrorProcessingRequestAlert();
+            return;
+        }
         viewService.viewTeamRoster(team);
     }
 
@@ -199,7 +203,6 @@ public class LeagueOrganizer {
 
     private boolean isNumberPlayersPerTeamValid(int numPlayersPerTeam) {
         return league.getUnsignedPlayers().size() >= numPlayersPerTeam && League.MAX_PLAYERS_PER_TEAM >= numPlayersPerTeam;
-        //FIXME: am I missing a check here?
     }
 
 }

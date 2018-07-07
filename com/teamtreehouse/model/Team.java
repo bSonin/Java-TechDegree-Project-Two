@@ -30,7 +30,7 @@ public class Team implements Comparable<Team> {
 
     @Override
     public int compareTo(Team other) {
-        return this.teamName.compareTo(other.getTeamName());
+        return this.teamName.toLowerCase().compareTo(other.getTeamName().toLowerCase());
     }
 
     // Utility Methods
