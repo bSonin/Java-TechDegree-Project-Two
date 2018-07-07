@@ -26,9 +26,14 @@ public class LeagueService {
     }
 
     public void addPlayerToTeam(Player player, Team team, League league) {
-        teamService.addPlayer(team, player);
-        signPlayer(league, player);
-        viewService.viewPlayerAdded(team, player);
+        if (team.getPlayers().size() < League.MAX_PLAYERS_PER_TEAM) {
+            teamService.addPlayer(team, player);
+            signPlayer(league, player);
+            viewService.viewPlayerAdded(team, player);
+        }
+        else {
+            viewService.viewTeamIsFullAlert();
+        }
     }
 
     public void removePlayerFromTeam(Player player, Team team, League league) {
@@ -93,7 +98,7 @@ public class LeagueService {
         }
     }
 
-    public void assignPlayersToTeamsByExperienceLevel(League league, int desiredNumPlayersPerTeam) {
+    public boolean assignPlayersToTeamsByExperienceLevel(League league, int desiredNumPlayersPerTeam) {
 
         // Sort players by experience level so we can do round robin assignment
         List<Player> players = new ArrayList<>(league.getUnsignedPlayers());
@@ -119,5 +124,6 @@ public class LeagueService {
                 --playerCount;
             }
         }
+        return !(playersPerTeam == desiredNumPlayersPerTeam);
     }
 }

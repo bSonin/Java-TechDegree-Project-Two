@@ -315,6 +315,7 @@ public class ViewService {
         System.out.printf("There are only %d players available, and there must be at least one player on each of the %d teams.%n",
                 league.getUnsignedPlayers().size(),
                 league.getTeams().size());
+        System.out.printf("Additionally, the maximum number of players allowed on a team is %d", League.MAX_PLAYERS_PER_TEAM);
     }
 
     public void viewTeamsAlreadyExistAlert() {
@@ -324,5 +325,13 @@ public class ViewService {
     public void viewInvalidNumberTeamsAlert(int numAvailablePlayers) {
         System.out.println("ERROR: You cannot have more teams than there are players.");
         System.out.printf("There are %d players available.%n", numAvailablePlayers);
+    }
+
+    public void viewTeamIsFullAlert() {
+        System.out.println("ERROR: The team already has the maximum number of players! Please add the player to a different team.");
+    }
+
+    public void viewModifiedRequestedTeamSizeAlert() {
+        System.out.println("The request number of players per team has been altered to create teams of equal size.");
     }
 }

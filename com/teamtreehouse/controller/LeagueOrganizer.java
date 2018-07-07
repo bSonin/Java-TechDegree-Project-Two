@@ -127,7 +127,8 @@ public class LeagueOrganizer {
                 viewService.viewInvalidPlayersPerTeamAlert(league);
                 numPlayersPerTeam = viewService.requestNumberPlayers(league);
             }
-            leagueService.assignPlayersToTeamsByExperienceLevel(league, numPlayersPerTeam);
+            boolean modifiedTeamSize = leagueService.assignPlayersToTeamsByExperienceLevel(league, numPlayersPerTeam);
+            if (modifiedTeamSize) { viewService.viewModifiedRequestedTeamSizeAlert(); }
         }
         else {
             viewService.viewTeamsAlreadyExistAlert();
@@ -209,7 +210,7 @@ public class LeagueOrganizer {
     }
 
     private boolean isNumberPlayersPerTeamValid(int numPlayersPerTeam) {
-        return league.getUnsignedPlayers().size() >= numPlayersPerTeam;
+        return league.getUnsignedPlayers().size() >= numPlayersPerTeam && League.MAX_PLAYERS_PER_TEAM >= numPlayersPerTeam;
         //FIXME: am I missing a check here?
     }
 
