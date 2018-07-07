@@ -15,21 +15,17 @@ public class LeagueService {
         teamService = new TeamService();
     }
 
-    public TeamService getTeamService() {
-        return teamService;
-    }
-
     public void createTeam(League league) {
         String teamName = viewService.requestTeamName();
         String coach = viewService.requestCoach();
         league.getTeams().add(new Team(teamName, coach));
     }
 
-    public void addPlayerToTeam(Player player, Team team, League league) {
+    public void addPlayerToTeam(Player player, Team team, League league, boolean showCreationMessage) {
         if (team.getPlayers().size() < League.MAX_PLAYERS_PER_TEAM) {
             teamService.addPlayer(team, player);
             signPlayer(league, player);
-            viewService.viewPlayerAdded(team, player);
+            if (showCreationMessage) { viewService.viewPlayerAdded(team, player); }
         }
         else {
             viewService.viewTeamIsFullAlert();
@@ -54,23 +50,6 @@ public class LeagueService {
     private void releasePlayer(League league, Player player) {
         league.getSignedPlayers().remove(player);
         league.getUnsignedPlayers().add(player);
-    }
-
-    private void removePlayerFromLeague(League league, Player player) {
-        league.getUnsignedPlayers().remove(player);
-        league.getSignedPlayers().remove(player);
-    }
-
-    public void setTeamService(TeamService teamService) {
-        this.teamService = teamService;
-    }
-
-    public ViewService getViewService() {
-        return viewService;
-    }
-
-    public void setViewService(ViewService viewService) {
-        this.viewService = viewService;
     }
 
     public void registerPlayer(League league) {
@@ -119,7 +98,7 @@ public class LeagueService {
         int currentPlayer = 0;
         while (playerCount >= league.getTeams().size() && (currentPlayer / league.getTeams().size() < playersPerTeam)) {
             for (Team team : league.getTeams()) {
-                addPlayerToTeam(players.get(currentPlayer), team, league);
+                addPlayerToTeam(players.get(currentPlayer), team, league, false);
                 ++currentPlayer;
                 --playerCount;
             }

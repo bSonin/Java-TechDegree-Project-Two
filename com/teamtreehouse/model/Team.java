@@ -20,24 +20,12 @@ public class Team implements Comparable<Team> {
         return teamName;
     }
 
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
-    }
-
     public String getCoach() {
         return coach;
     }
 
-    public void setCoach(String coach) {
-        this.coach = coach;
-    }
-
     public Set<Player> getPlayers() {
         return players;
-    }
-
-    public void setPlayers(Set<Player> players) {
-        this.players = players;
     }
 
     @Override

@@ -7,18 +7,6 @@ import com.teamtreehouse.service.LeagueService;
 import com.teamtreehouse.service.TeamService;
 import com.teamtreehouse.service.ViewService;
 
-
-//FIXME: Next Steps
-/*
-    1) Confirm current functionality
-           *) Questionable on add/remove player from chosen/yet to be chosen team
-    2) Clean up methods based on Treehouse admin feedback
-    3) Bolster null/empty collection checking
-    4) Consider FIXMEs
-    5) Clean up UI a bit.
-    6) Submit
- */
-
 public class LeagueOrganizer {
     private League league;
     private LeagueService leagueService;
@@ -156,7 +144,7 @@ public class LeagueOrganizer {
                 viewService.viewErrorProcessingRequestAlert();
                 return;
             }
-            leagueService.addPlayerToTeam(player, team, league);
+            leagueService.addPlayerToTeam(player, team, league, true);
         }
         else {
             viewService.viewNoTeamsAlert();
@@ -213,25 +201,5 @@ public class LeagueOrganizer {
         return league.getUnsignedPlayers().size() >= numPlayersPerTeam && League.MAX_PLAYERS_PER_TEAM >= numPlayersPerTeam;
         //FIXME: am I missing a check here?
     }
-
-//FIXME: Either clean this up or delete it...
-//    private void viewAvailablePlayersFlow() {
-//        if (league.getUnsignedPlayers().size() == 0) {
-//            viewService.viewNoAvailablePlayersAlert();
-//        }
-//        else {
-//            viewService.viewPlayers(league.getUnsignedPlayers());
-//        }
-//    }
-//
-//    private void viewRosterFlow() {
-//        if (league.getTeams().size() == 0) {
-//            viewService.viewNoTeamsAlert();
-//        }
-//        else {
-//            viewService.viewLeagueRoster(league);
-//        }
-//    }
-
 
 }
